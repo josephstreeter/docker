@@ -1,0 +1,80 @@
+# SuiteCRM - https://github.com/bitnami/bitnami-docker-suitecrm
+# Install
+docker network create suitecrm-tier
+
+docker run -d --name mariadb -e ALLOW_EMPTY_PASSWORD=yes \
+  --net suitecrm-tier \
+  --volume /opt/mariadb/mariadb-persistence:/bitnami/mariadb \
+  bitnami/mariadb:latest
+
+docker run -d -p 80:80 -p 443:443 --name suitecrm  \
+  -e SUITECRM_SMTP_HOST=smtp.gmail.com \
+  -e SUITECRM_SMTP_PROTOCOL=TLS \
+  -e SUITECRM_SMTP_PORT=587 \
+  -e SUITECRM_SMTP_USER=joseph.streeter76@gmail.com \
+  -e SUITECRM_SMTP_PASSWORD=INfantry_! \
+  --net suitecrm-tier \
+  --volume /opt/suitecrm/suitecrm-persistence:/bitnami/suitecrm \
+  --volume /opt/suitecrm/apache-persistence:/bitnami/apache \
+  --volume /opt/suitecrm/php-persistence:/bitnami/php \
+  bitnami/suitecrm:latest
+
+# Update
+docker pull bitnami/suitecrm:latest
+
+docker stop suitecrm
+
+docker rm -v suitecrm
+
+docker run -d --name suitecrm -p 80:80 -p 443:443 \
+  --net suitecrm-tier \
+  --volume /path/to/suitecrm-persistence:/bitnami/suitecrm \
+  --volume /path/to/apache-persistence:/bitnami/apache \
+  --volume /path/to/php-persistence:/bitnami/php \
+  bitnami/suitecrm:latest
+
+# QuantumObject/Docker-Cacti https://github.com/QuantumObject/docker-cacti
+docker run -d -p 80  quantumobject/docker-cacti
+
+# To access the container from the server that the container is running
+
+docker exec -it container_id /bin/bash
+
+# change directory to plugins directory of the cacti ubuntu
+
+cd /usr/share/cacti/site/plugins/
+
+# download and unpack plugins
+
+wget wget http://docs.cacti.net/_media/plugin:flowview-v1.1-1.tgz
+gunzip -c plugin\:flowview-v1.1-1.tgz | tar xvf -
+mkdir -p /var/netflow/flows/completed
+chmod 777 /var/netflow/flows/completed
+
+# To backup use the command below:
+
+docker exec -it container_id /sbin/backup
+
+# The backup data was created /var/backups/alldb_backup.sql.
+
+# To restore use the command below:
+
+docker exec -it container_id /sbin/restore
+
+# QuantumObject/Docker-Nagios
+# To run container use the command below:
+
+docker run -d -p 25 -p 8081:80 quantumobject/docker-nagios
+
+#login : nagiosadmin password: admin please replace it after install.
+
+#to access the container please use :
+
+docker exec -it container_id  /bin/bash
+
+#to replace password :
+
+htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+# note: to access site is http://server_ip:external_container_port/nagios/
+# update to nrpe-3.1.1
+# update to nagios-plugins-2.2.1

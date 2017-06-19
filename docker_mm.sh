@@ -1,0 +1,1 @@
+docker run  -d -t --publish 8080:8080 --restart always --volume ~/magic_mirror/config:/opt/magic_mirror/config --volume ~/magic_mirror/modules:/opt/magic_mirror/modules --name magic_mirror magic_mirror
