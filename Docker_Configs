@@ -1,3 +1,25 @@
+# Wordpress - https://github.com/bitnami/bitnami-docker-wordpress
+docker network create wordpress-tier
+
+docker run -d --name mariadb \
+  -e ALLOW_EMPTY_PASSWORD=yes \
+  -e MARIADB_USER=bn_wordpress \
+  -e MARIADB_DATABASE=bitnami_wordpress \
+  --net wordpress-tier \
+  --volume C:\Docker\mariadb-persistence:/bitnami \
+  bitnami/mariadb:latest
+
+docker run -d --name wordpress -p 80:80 -p 443:443 \
+  -e ALLOW_EMPTY_PASSWORD=yes \
+  -e WORDPRESS_DATABASE_USER=bn_wordpress \
+  -e WORDPRESS_DATABASE_NAME=bitnami_wordpress \
+  --net wordpress-tier \
+  --volume C:\Docker\Wordpress-persistence:/bitnami \
+  bitnami/wordpress:latest
+
+
+
+
 # SuiteCRM - https://github.com/bitnami/bitnami-docker-suitecrm
 # Install
 docker network create suitecrm-tier
