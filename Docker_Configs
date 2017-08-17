@@ -1,4 +1,8 @@
+
+
+
 # Wordpress - https://github.com/bitnami/bitnami-docker-wordpress
+# Install 
 docker network create wordpress-tier
 
 docker run -d --name mariadb \
@@ -6,7 +10,7 @@ docker run -d --name mariadb \
   -e MARIADB_USER=bn_wordpress \
   -e MARIADB_DATABASE=bitnami_wordpress \
   --net wordpress-tier \
-  --volume C:\Docker\mariadb-persistence:/bitnami \
+  --volume /docker/wordpress/mariadb-persistence:/bitnami \
   bitnami/mariadb:latest
 
 docker run -d --name wordpress -p 80:80 -p 443:443 \
@@ -14,7 +18,7 @@ docker run -d --name wordpress -p 80:80 -p 443:443 \
   -e WORDPRESS_DATABASE_USER=bn_wordpress \
   -e WORDPRESS_DATABASE_NAME=bitnami_wordpress \
   --net wordpress-tier \
-  --volume C:\Docker\Wordpress-persistence:/bitnami \
+  --volume /docker/wordpress/wordpress-persistence:/bitnami \
   bitnami/wordpress:latest
 
 
@@ -100,3 +104,18 @@ htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
 # note: to access site is http://server_ip:external_container_port/nagios/
 # update to nrpe-3.1.1
 # update to nagios-plugins-2.2.1
+
+
+
+#ITOP
+
+sudo docker run -d -p 8081:80 --name=my-itop vbkunin/itop:2.3.4
+
+docker run --name=itop \
+ -d -p 8081:80 \
+ -e ITOP__VERSION=2.3.0-beta \
+ -e ITOP__FILENAME=iTop-2.3.0-beta-2777.zip \
+ -v /docker/itop:/var/www/html \
+ -e ITOP__TOOLKIT=YES \
+ -it \
+ teamworksi/docker-itop
